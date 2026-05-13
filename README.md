@@ -118,8 +118,7 @@ It blends:
 
 ## 📸 Screenshot
 
--<img width="882" height="1319" alt="image" src="https://github.com/user-attachments/assets/c856e7b7-468e-4d57-98ef-236e4a5bb292" />
-
+<img width="882" height="1319" alt="image" src="https://github.com/user-attachments/assets/c856e7b7-468e-4d57-98ef-236e4a5bb292" />
 
 ---
 
