@@ -1,6 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Habit Tracker</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+
+  background:
+    radial-gradient(circle at top left, rgba(120, 30, 60, 0.15), transparent 30%),
+    #07111f;
+
+  color: #f5f1fa;
+
+  max-width: 540px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+/* HEADER */
+.title {
+  font-family: Georgia, serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #d4b24c;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  width: 80px;
+  height: 2px;
+  background: rgba(212, 178, 76, 0.6);
+}
+
+.subtitle {
+  color: rgba(140, 150, 180, 0.8);
+  font-style: italic;
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+}
+
+/* LIST */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  margin-bottom: 14px;
+}
+
+label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 16px 18px;
+
+  background: rgba(24, 32, 52, 0.96);
+
+  border: 1px solid rgba(139, 30, 63, 0.35);
+
+  border-radius: 14px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+label:hover {
+  background: rgba(30, 38, 60, 0.98);
+  border-color: rgba(212, 178, 76, 0.45);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+.plant {
+  margin-right: 14px;
+  font-size: 1.25rem;
+  transition: all 0.15s ease;
+}
+
+.habit-text {
+  flex: 1;
+  font-size: 1rem;
+  letter-spacing: -0.2px;
+}
+
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #b38a3d;
+  cursor: pointer;
+}
+
+/* BREATHING TOOL */
+.breathe-button {
+  margin-top: 10px;
+  width: 100%;
+  border: none;
+  background: #b38a3d;
+  color: #07111f;
+  font-weight: bold;
+  padding: 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.breathe-button:hover {
+  background: #d4b24c;
+}
+
+/* CALM MODE CARD */
+.breathing-box {
+  margin-top: 12px;
+
+  background: linear-gradient(
+    180deg,
+    rgba(24, 32, 52, 0.98),
+    rgba(18, 24, 40, 0.98)
+  );
+
+  border: 1px solid rgba(212, 178, 76, 0.25);
+
+  border-radius: 14px;
+
+  padding: 28px;
+
+  text-align: center;
+
+  display: none;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.breathing-box.active {
+  display: block;
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* BREATHING CIRCLE */
+.breathing-circle {
+  width: 120px;
+  height: 120px;
+
+  margin: 0 auto 20px;
+
+  border-radius: 50%;
+
+  background: rgba(212, 178, 76, 0.12);
+
+  border: 2px solid rgba(212, 178, 76, 0.7);
+
+  box-shadow: 0 0 0 rgba(212, 178, 76, 0.0);
+
+  animation: breathe 8s infinite ease-in-out, glow 4s infinite ease-in-out;
+}
+
+@keyframes breathe {
+  0% { transform: scale(0.8); }
+  25% { transform: scale(1.2); }
+  50% { transform: scale(1.2); }
+  75% { transform: scale(0.8); }
+  100% { transform: scale(0.8); }
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 0 rgba(212, 178, 76, 0.0); }
+  50% { box-shadow: 0 0 30px rgba(212, 178, 76, 0.25); }
+  100% { box-shadow: 0 0 0 rgba(212, 178, 76, 0.0); }
+}
+
+.breathing-text {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1 class="title">Today's Progress</h1>
+<p class="subtitle">— Habit Garden Tracker</p>
+
+<ul>
+
+  <li>
+    <label>
+      <span class="plant" data-id="water">🌰</span>
+      <span class="habit-text">Drank water (8 glasses)</span>
+      <input type="checkbox" class="habit-check" data-id="water" />
+    </label>
+  </li>
+
+  <li>
+    <label>
+      <span class="plant" data-id="active">🌰</span>
+      <span class="habit-text">Got Active (30 min)</span>
+      <input type="checkbox" class="habit-check" data-id="active" />
+    </label>
+  </li>
+
+  <li>
+    <label>
+      <span class="plant" data-id="sleep">🌰</span>
+      <span class="habit-text">8 hours sleep</span>
+      <input type="checkbox" class="habit-check" data-id="sleep" />
+    </label>
+  </li>
+
+  <li>
+
+    <label>
+      <span class="plant" data-id="stress">🌰</span>
+      <span class="habit-text">Stress Management (Breathe!)</span>
+      <input type="checkbox" class="habit-check" data-id="stress" />
+    </label>
+
+    <button class="breathe-button" id="breathe-toggle">
+      BREATHE!
+    </button>
+
+    <div class="breathing-box" id="breathing-box">
+      <div class="breathing-circle"></div>
+      <p class="breathing-text" id="breathing-text">Breathe In</p>
+    </div>
+
+  </li>
+
+</ul>
+
 <script>
 
-const habits = ["water", "active", "sleep", "stress"];
+/* BREATHING TOOL */
+const button = document.getElementById("breathe-toggle");
+const box = document.getElementById("breathing-box");
+const text = document.getElementById("breathing-text");
+
+button.addEventListener("click", () => {
+  box.classList.toggle("active");
+});
+
+const phases = ["Breathe In", "Hold", "Breathe Out", "Hold"];
+const timings = [4000, 2000, 4000, 2000];
+
+let i = 0;
+
+function runBreathing() {
+  text.textContent = phases[i];
+
+  setTimeout(() => {
+    i = (i + 1) % phases.length;
+    runBreathing();
+  }, timings[i]);
+}
+
+runBreathing();
+
+/* HABITS */
 
 const todayISO = () =>
   new Date().toISOString().slice(0, 10);
@@ -37,49 +325,44 @@ function getPlant(streak) {
   return "🌰";
 }
 
-function animatePlant(el, newEmoji) {
-  el.style.transform = "scale(0.7)";
+function animatePlant(el, emoji) {
   el.style.opacity = "0.3";
+  el.style.transform = "scale(0.8)";
 
   setTimeout(() => {
-    el.textContent = newEmoji;
-    el.style.transform = "scale(1)";
+    el.textContent = emoji;
     el.style.opacity = "1";
+    el.style.transform = "scale(1)";
   }, 120);
 }
 
 function updateUI(id) {
+
   const data = loadHabit(id);
   const set = new Set(data.days);
 
   const streak = getStreak(set);
 
-  const checkbox = document.querySelector(`input[data-id="${id}"]`);
-  const plant = checkbox.parentElement.querySelector(".plant");
+  const plant = document.querySelector(`.plant[data-id="${id}"]`);
 
-  const newPlant = getPlant(streak);
-
-  animatePlant(plant, newPlant);
+  animatePlant(plant, getPlant(streak));
 }
 
 function toggleToday(id) {
+
   const data = loadHabit(id);
   const set = new Set(data.days);
 
   const today = todayISO();
 
-  if (set.has(today)) {
-    set.delete(today);
-  } else {
-    set.add(today);
-  }
+  if (set.has(today)) set.delete(today);
+  else set.add(today);
 
   saveHabit(id, { days: [...set] });
 
   updateUI(id);
 }
 
-/* INIT */
 document.querySelectorAll(".habit-check").forEach((checkbox) => {
 
   const id = checkbox.dataset.id;
@@ -92,23 +375,7 @@ document.querySelectorAll(".habit-check").forEach((checkbox) => {
 
 });
 
-/* BREATHING TOOL */
-const button = document.getElementById("breathe-toggle");
-const box = document.getElementById("breathing-box");
-const text = document.getElementById("breathing-text");
-
-button.addEventListener("click", () => {
-  box.classList.toggle("active");
-});
-
-const phases = ["Breathe In", "Hold", "Breathe Out", "Hold"];
-
-let i = 0;
-
-setInterval(() => {
-  if (!text) return;
-  text.textContent = phases[i];
-  i = (i + 1) % phases.length;
-}, 2000);
-
 </script>
+
+</body>
+</html>
