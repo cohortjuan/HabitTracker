@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Tracker</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+
+      background:
+        radial-gradient(
+          circle at top left,
+          rgba(120, 30, 60, 0.15),
+          transparent 30%
+        ),
+        #07111f;
+
+      color: #f5f1fa;
+
+      max-width: 540px;
+
+      margin: 60px auto;
+
+      padding: 0 20px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+
+      margin-bottom: 28px;
+
+      font-weight: 700;
+
+      letter-spacing: -1px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 16px 18px;
+
+      background: rgba(24, 32, 52, 0.96);
+
+      border: 1px solid rgba(139, 30, 63, 0.35);
+
+      border-radius: 14px;
+
+      cursor: pointer;
+
+      transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.15s ease;
+    }
+
+    label:hover {
+      background: rgba(30, 38, 60, 0.98);
+
+      border-color: rgba(212, 178, 76, 0.4);
+
+      transform: translateY(-1px);
+    }
+
+    .plant {
+      margin-right: 14px;
+
+      font-size: 1.2rem;
+    }
+
+    .habit-text {
+      flex: 1;
+
+      color: #f5f1fa;
+    }
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+
+      accent-color: #b38a3d;
+
+      cursor: pointer;
+    }
+
+    .breathe-button {
+      margin-top: 10px;
+
+      width: 100%;
+
+      border: none;
+
+      background: #b38a3d;
+
+      color: #07111f;
+
+      font-weight: bold;
+
+      padding: 14px;
+
+      border-radius: 12px;
+
+      cursor: pointer;
+
+      transition: 0.2s ease;
+    }
+
+    .breathe-button:hover {
+      background: #d4b24c;
+    }
+
+    .breathing-box {
+      margin-top: 12px;
+
+      background: rgba(24, 32, 52, 0.96);
+
+      border: 1px solid rgba(212, 178, 76, 0.3);
+
+      border-radius: 14px;
+
+      padding: 24px;
+
+      text-align: center;
+
+      display: none;
+    }
+
+    .breathing-box.active {
+      display: block;
+    }
+
+    .breathing-circle {
+      width: 120px;
+      height: 120px;
+
+      margin: 0 auto 20px;
+
+      border-radius: 50%;
+
+      background: rgba(212, 178, 76, 0.18);
+
+      border: 2px solid #d4b24c;
+
+      animation: breathe 8s infinite ease-in-out;
+    }
+
+    .breathing-text {
+      font-size: 1.2rem;
+    }
+
+    @keyframes breathe {
+
+      0% {
+        transform: scale(0.8);
+      }
+
+      25% {
+        transform: scale(1.2);
+      }
+
+      50% {
+        transform: scale(1.2);
+      }
+
+      75% {
+        transform: scale(0.8);
+      }
+
+      100% {
+        transform: scale(0.8);
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <h1>Today</h1>
+
+  <ul id="habit-list">
+
+    <li>
+      <label>
+        <span class="plant">🌰</span>
+        <span class="habit-text">Drink water</span>
+        <input type="checkbox" class="habit-check" data-id="water" />
+      </label>
+    </li>
+
+    <li>
+      <label>
+        <span class="plant">🌰</span>
+        <span class="habit-text">Get Active (30 Minutes!)</span>
+        <input type="checkbox" class="habit-check" data-id="active" />
+      </label>
+    </li>
+
+    <li>
+      <label>
+        <span class="plant">🌰</span>
+        <span class="habit-text">8 hours of sleep (or close!)</span>
+        <input type="checkbox" class="habit-check" data-id="sleep" />
+      </label>
+    </li>
+
+    <li>
+      <label>
+        <span class="plant">🌰</span>
+        <span class="habit-text">Stress Management (Breathe!)</span>
+        <input type="checkbox" class="habit-check" data-id="stress" />
+      </label>
+
+      <button class="breathe-button" id="breathe-toggle">
+        BREATHE!
+      </button>
+
+      <div class="breathing-box" id="breathing-box">
+
+        <div class="breathing-circle"></div>
+
+        <p class="breathing-text" id="breathing-text">
+          Breathe In
+        </p>
+
+      </div>
+    </li>
+
+  </ul>
+
+  <script>
+
+    const button = document.getElementById("breathe-toggle");
+
+    const box = document.getElementById("breathing-box");
+
+    button.addEventListener("click", () => {
+      box.classList.toggle("active");
+    });
+
+    const breathingText = document.getElementById("breathing-text");
+
+    const phases = [
+      "Breathe In",
+      "Hold",
+      "Breathe Out",
+      "Hold"
+    ];
+
+    let phaseIndex = 0;
+
+    setInterval(() => {
+
+      breathingText.textContent = phases[phaseIndex];
+
+      phaseIndex = (phaseIndex + 1) % phases.length;
+
+    }, 2000);
+
+    const checkboxes = document.querySelectorAll(".habit-check");
+
+    checkboxes.forEach((checkbox) => {
+
+      const habitId = checkbox.dataset.id;
+
+      const savedHabit =
+        JSON.parse(localStorage.getItem(habitId)) || {
+          checked: false,
+          streak: 0
+        };
+
+      checkbox.checked = savedHabit.checked;
+
+      updatePlant(checkbox, savedHabit.streak);
+
+      checkbox.addEventListener("change", () => {
+
+        let streak = savedHabit.streak;
+
+        if (checkbox.checked) {
+          streak++;
+        } else {
+          streak = 0;
+        }
+
+        const updatedHabit = {
+          checked: checkbox.checked,
+          streak: streak
+        };
+
+        localStorage.setItem(
+          habitId,
+          JSON.stringify(updatedHabit)
+        );
+
+        updatePlant(checkbox, streak);
+
+      });
+
+    });
+
+    function updatePlant(checkbox, streak) {
+
+      const plant =
+        checkbox.parentElement.querySelector(".plant");
+
+      if (streak >= 30) {
+        plant.textContent = "🌳";
+      }
+
+      else if (streak >= 14) {
+        plant.textContent = "🌷";
+      }
+
+      else if (streak >= 7) {
+        plant.textContent = "🌿";
+      }
+
+      else if (streak >= 3) {
+        plant.textContent = "🌱";
+      }
+
+      else {
+        plant.textContent = "🌰";
+      }
+
+    }
+
+  </script>
+
+</body>
+</html>
