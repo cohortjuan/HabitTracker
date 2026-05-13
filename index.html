@@ -13,70 +13,96 @@ body {
   color: #e6f1ff;
 }
 
-/* HEADER */
+/* APP SHELL (mobile-first widget feel) */
+.app {
+  max-width: 420px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER CARD */
 .header {
-  text-align: center;
-  padding: 20px;
   background: #111a2e;
-  border-bottom: 2px solid #1e4bd8;
+  padding: 16px;
+  text-align: center;
+  border-bottom: 1px solid #1e4bd8;
 }
 
-.bob {
-  font-size: 60px;
-  animation: bob 2.5s infinite ease-in-out;
+/* SVG BOB */
+.bob-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
 }
 
-@keyframes bob {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+svg {
+  width: 120px;
+  height: 160px;
+}
+
+/* blink animation */
+.eye {
+  animation: blink 4s infinite;
+  transform-origin: center;
+}
+
+@keyframes blink {
+  0%, 96%, 100% { transform: scaleY(1); }
+  97% { transform: scaleY(0.1); }
+}
+
+/* stem grow via CSS variable */
+#stem {
+  transform-origin: bottom;
+  transform: scaleY(var(--grow, 1));
+  transition: transform 0.5s ease;
 }
 
 .stage {
-  color: #6ee7b7;
   font-size: 13px;
-  margin-top: 5px;
-}
-
-.phrase {
-  font-size: 14px;
-  color: #93c5fd;
-  min-height: 20px;
-  margin-top: 5px;
+  color: #6ee7b7;
 }
 
 .stats {
   font-size: 12px;
   color: #9ca3af;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
-/* CONTAINER */
-.container {
-  max-width: 700px;
-  margin: auto;
-  padding: 20px;
+.phrase {
+  font-size: 13px;
+  color: #93c5fd;
+  min-height: 18px;
+  margin-top: 6px;
 }
 
-/* CARD */
+/* MAIN AREA */
+.content {
+  flex: 1;
+  padding: 12px;
+}
+
+/* HABIT CARD */
 .card {
   background: #121b2f;
   border: 1px solid #223;
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 12px;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
 }
 
 .title {
-  font-size: 15px;
-  margin-bottom: 8px;
+  font-size: 14px;
+  margin-bottom: 6px;
 }
 
 .progress {
-  height: 10px;
+  height: 8px;
   background: #1f2a44;
   border-radius: 10px;
   overflow: hidden;
-  margin-bottom: 8px;
 }
 
 .bar {
@@ -86,215 +112,247 @@ body {
   transition: width 0.3s;
 }
 
-.controls {
+.meta {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 6px;
+}
+
+/* BOTTOM ACTION BAR (mobile UX) */
+.actions {
+  position: sticky;
+  bottom: 0;
+  background: #0b1220;
+  padding: 10px;
+  border-top: 1px solid #1e4bd8;
   display: flex;
   gap: 8px;
 }
 
 button {
-  background: #1e4bd8;
+  flex: 1;
+  padding: 12px;
   border: none;
+  border-radius: 10px;
+  background: #1e4bd8;
   color: white;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
+  font-weight: 600;
 }
 
-button:hover { background: #3b82f6; }
-
-.small {
-  font-size: 12px;
-  color: #9ca3af;
-}
-
-/* STREAK BADGE */
-.streak {
-  display: inline-block;
-  background: rgba(30,75,216,0.2);
-  border: 1px solid #1e4bd8;
-  padding: 4px 8px;
-  border-radius: 999px;
-  font-size: 12px;
-  margin-top: 6px;
+button:active {
+  transform: scale(0.98);
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  <div class="bob">🌱🤓</div>
-  <div class="stage" id="stage">Seedling Bob — Level 1</div>
-  <div class="phrase" id="phrase">Booting habit engine...</div>
-  <div class="stats">
-    XP: <span id="xp">0</span> | Level: <span id="level">1</span> | 🔥 Streak: <span id="streak">0</span>
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+
+    <div class="bob-wrap">
+
+      <!-- 🌿 SEEDLING BOB SVG -->
+      <svg viewBox="0 0 120 160">
+
+        <!-- STEM (grows) -->
+        <rect id="stem" x="58" y="60" width="4" height="60" fill="#22c55e"/>
+
+        <!-- LEAF -->
+        <path id="leaf"
+          d="M60 60 C40 40, 30 70, 60 75 C90 70, 80 40, 60 60"
+          fill="#16a34a"/>
+
+        <!-- HEAD -->
+        <circle cx="60" cy="40" r="18" fill="#a3e635"/>
+
+        <!-- GLASSES -->
+        <circle cx="54" cy="40" r="5" stroke="#0f172a" stroke-width="2" fill="none"/>
+        <circle cx="66" cy="40" r="5" stroke="#0f172a" stroke-width="2" fill="none"/>
+        <line x1="59" y1="40" x2="61" y2="40" stroke="#0f172a" stroke-width="2"/>
+
+        <!-- EYES -->
+        <circle class="eye" cx="54" cy="40" r="2" fill="#0f172a"/>
+        <circle class="eye" cx="66" cy="40" r="2" fill="#0f172a"/>
+
+      </svg>
+
+    </div>
+
+    <div class="stage" id="stage">Seedling Bob — Level 1</div>
+    <div class="stats">
+      XP <span id="xp">0</span> | 🔥 Streak <span id="streak">0</span>
+    </div>
+    <div class="phrase" id="phrase">Booting growth system...</div>
   </div>
+
+  <!-- CONTENT -->
+  <div class="content" id="app"></div>
+
+  <!-- ACTIONS -->
+  <div class="actions">
+    <button onclick="resetAll()">Reset Day</button>
+    <button onclick="boost()">Debug Boost</button>
+  </div>
+
 </div>
 
-<div class="container" id="app"></div>
-
 <script>
+
 /* ---------------- DATA ---------------- */
 
 const phrases = [
-  "New commit detected… nice.",
-  "Your streak is compiling…",
-  "Bug fixed: consistency restored.",
+  "Commit received… growth compiling.",
+  "Your streak is stabilizing.",
+  "Bug fixed: discipline restored.",
   "Pushing habits to production 🌱",
-  "Refactoring your life…",
-  "Cache updated: discipline++",
-  "You just shipped consistency.",
-  "Low hydration detected (again).",
-  "Daily build successful.",
-  "This streak is getting dangerous 👀"
+  "Leaf expansion detected.",
+  "Refactoring lifestyle module…",
+  "System check: looking healthy.",
+  "Warning: hydration subsystem low.",
+  "Daily build passed.",
+  "You’re scaling fast 👀"
 ];
 
 const habits = [
   { name: "Drink 8 glasses of water", goal: 8, progress: 0 },
-  { name: "30 minutes of movement", goal: 1, progress: 0 },
+  { name: "30 min movement", goal: 1, progress: 0 },
   { name: "Write 20 lines of code", goal: 20, progress: 0 }
 ];
 
-/* ---------------- STORAGE KEYS ---------------- */
+/* ---------------- STORAGE ---------------- */
 
 const TODAY = new Date().toISOString().split("T")[0];
-const SAVE_KEY = "bob_habits_v2";
-const STREAK_KEY = "bob_streak";
-const LAST_DATE_KEY = "bob_last_date";
-
-/* ---------------- STATE ---------------- */
+const KEY = "seedling_bob_v3";
+const STREAK_KEY = "streak_v3";
+const LAST_KEY = "last_v3";
 
 let xp = 0;
 let streak = parseInt(localStorage.getItem(STREAK_KEY) || "0");
-let lastDate = localStorage.getItem(LAST_DATE_KEY);
+let last = localStorage.getItem(LAST_KEY);
 
-/* reset daily progress if new day */
-if (lastDate !== TODAY) {
-  streak = (lastDate && isYesterday(lastDate, TODAY)) ? streak + 1 : 1;
+/* new day logic */
+if (last !== TODAY) {
+  streak = last ? streak + 1 : 1;
   localStorage.setItem(STREAK_KEY, streak);
-  localStorage.setItem(LAST_DATE_KEY, TODAY);
-  saveHabits(true);
+  localStorage.setItem(LAST_KEY, TODAY);
 }
 
-/* ---------------- UTIL ---------------- */
-
-function isYesterday(prev, now) {
-  const p = new Date(prev);
-  const n = new Date(now);
-  const diff = (n - p) / (1000*60*60*24);
-  return diff === 1;
-}
-
-function stageFromXP(xp) {
-  if (xp < 10) return "🌱 Seedling Bob — Level 1";
-  if (xp < 30) return "🪴 Sprout Bob — Level 2";
-  if (xp < 60) return "🌿 Growing Bob — Level 3";
-  return "🌳 Fully Grown Bob — Level 4";
-}
-
-/* ---------------- SAVE / LOAD ---------------- */
-
-function saveHabits(reset=false) {
-  if (reset) {
-    habits.forEach(h => h.progress = 0);
-  }
-  localStorage.setItem(SAVE_KEY, JSON.stringify(habits));
-}
-
-function loadHabits() {
-  const saved = localStorage.getItem(SAVE_KEY);
-  if (saved) {
-    const data = JSON.parse(saved);
-    data.forEach((h,i) => habits[i].progress = h.progress);
-  }
-}
-
-/* ---------------- RENDER ---------------- */
+/* ---------------- ELEMENTS ---------------- */
 
 const app = document.getElementById("app");
-const phraseEl = document.getElementById("phrase");
-const stageEl = document.getElementById("stage");
+const phrase = document.getElementById("phrase");
+const stage = document.getElementById("stage");
 const xpEl = document.getElementById("xp");
-const levelEl = document.getElementById("level");
 const streakEl = document.getElementById("streak");
+const stem = document.getElementById("stem");
+const leaf = document.getElementById("leaf");
+
+/* ---------------- UI ---------------- */
 
 function render() {
   app.innerHTML = "";
 
   habits.forEach((h, i) => {
-    const percent = (h.progress / h.goal) * 100;
+    const pct = (h.progress / h.goal) * 100;
 
-    const card = document.createElement("div");
-    card.className = "card";
+    const div = document.createElement("div");
+    div.className = "card";
 
-    card.innerHTML = `
+    div.innerHTML = `
       <div class="title">${h.name}</div>
-
       <div class="progress">
-        <div class="bar" style="width:${percent}%"></div>
+        <div class="bar" style="width:${pct}%"></div>
       </div>
-
-      <div class="small">${h.progress}/${h.goal}</div>
-
-      <div class="controls">
-        <button onclick="add(${i})">+ progress</button>
-        <button onclick="reset(${i})">reset</button>
-      </div>
+      <div class="meta">${h.progress}/${h.goal}</div>
+      <button onclick="add(${i})">+ progress</button>
     `;
 
-    app.appendChild(card);
+    app.appendChild(div);
   });
 }
 
-/* ---------------- GAME LOGIC ---------------- */
+/* ---------------- BOB GROWTH ---------------- */
+
+function updateBob() {
+  const total = habits.reduce((a,b)=>a+b.progress,0);
+
+  xpEl.textContent = xp;
+  streakEl.textContent = streak;
+
+  // level
+  let level = 1;
+  if (xp > 10) level = 2;
+  if (xp > 30) level = 3;
+  if (xp > 60) level = 4;
+
+  stage.textContent =
+    ["🌱 Seed Bob","🪴 Sprout Bob","🌿 Growing Bob","🌳 Fully Grown Bob"][level-1];
+
+  // growth scaling
+  const grow = 1 + (xp / 80);
+  stem.style.setProperty("--grow", Math.min(grow, 2));
+
+  leaf.style.transform = `scale(${1 + xp/120})`;
+
+  phrase.textContent =
+    phrases[Math.floor(Math.random()*phrases.length)];
+}
+
+/* ---------------- ACTIONS ---------------- */
 
 function add(i) {
   const h = habits[i];
   if (h.progress < h.goal) {
     h.progress++;
-
     xp += 2;
 
-    if (h.progress === h.goal) {
-      xp += 5; // completion bonus
-    }
+    if (h.progress === h.goal) xp += 5;
 
-    saveHabits();
-    updateUI();
+    save();
     render();
+    updateBob();
   }
 }
 
-function reset(i) {
-  habits[i].progress = 0;
-  saveHabits();
-  updateUI();
-  render();
+function save() {
+  localStorage.setItem(KEY, JSON.stringify(habits));
 }
 
-/* ---------------- UI UPDATE ---------------- */
+function load() {
+  const d = localStorage.getItem(KEY);
+  if (d) {
+    const parsed = JSON.parse(d);
+    parsed.forEach((h,i)=>habits[i].progress = h.progress);
+  }
+}
 
-function updateUI() {
-  stageEl.textContent = stageFromXP(xp);
-  xpEl.textContent = xp;
-  levelEl.textContent = Math.floor(xp / 20) + 1;
-  streakEl.textContent = streak;
+function resetAll() {
+  habits.forEach(h => h.progress = 0);
+  xp = 0;
+  save();
+  render();
+  updateBob();
+}
 
-  phraseEl.textContent =
-    phrases[Math.floor(Math.random() * phrases.length)];
+function boost() {
+  xp += 10;
+  updateBob();
 }
 
 /* ---------------- INIT ---------------- */
 
-loadHabits();
+load();
 render();
-updateUI();
+updateBob();
 
-/* auto phrase loop */
 setInterval(() => {
-  phraseEl.textContent =
-    phrases[Math.floor(Math.random() * phrases.length)];
+  phrase.textContent =
+    phrases[Math.floor(Math.random()*phrases.length)];
 }, 5000);
+
 </script>
 
 </body>
