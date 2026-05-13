@@ -262,14 +262,19 @@ input[type="checkbox"] {
 </ul>
 
 <script>
+/* BREATHING TOOL SAFE VERSION */
 
-/* BREATHING TOOL */
 const button = document.getElementById("breathe-toggle");
 const box = document.getElementById("breathing-box");
 const text = document.getElementById("breathing-text");
 
+let breathingActive = false;
+
 button.addEventListener("click", () => {
   box.classList.toggle("active");
+  breathingActive = box.classList.contains("active");
+
+  if (breathingActive) startBreathing();
 });
 
 const phases = ["Breathe In", "Hold", "Breathe Out", "Hold"];
@@ -277,17 +282,18 @@ const timings = [4000, 2000, 4000, 2000];
 
 let i = 0;
 
-function runBreathing() {
+function startBreathing() {
+  if (!breathingActive) return;
+
+  if (!text) return; // prevents crash
+
   text.textContent = phases[i];
 
   setTimeout(() => {
     i = (i + 1) % phases.length;
-    runBreathing();
+    startBreathing();
   }, timings[i]);
 }
-
-runBreathing();
-
 /* HABITS */
 
 const todayISO = () =>
@@ -343,7 +349,8 @@ function updateUI(id) {
 
   const streak = getStreak(set);
 
-  const plant = document.querySelector(`.plant[data-id="${id}"]`);
+ const plant = document.querySelector(`.plant[data-id="${id}"]`);
+ if (!plant) return;
 
   animatePlant(plant, getPlant(streak));
 }
