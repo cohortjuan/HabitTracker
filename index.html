@@ -143,6 +143,22 @@ button{
   margin:10px 0;
   font-style:italic;
 }
+  
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  margin-top: 10px;
+}
+.day {
+  aspect-ratio: 1;
+  background: #1e2a44;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.day.done {
+  background: var(--green);
+}
 </style>
 </head>
 
@@ -231,7 +247,17 @@ const bob = document.getElementById("bob")
 function today(){
   return new Date().toISOString().split("T")[0]
 }
-
+  
+function getLast50Days() {
+  const days = []
+  for (let i = 49; i >= 0; i--) {
+    const date = new Date()
+    date.setDate(date.getDate() - i)
+    const iso = date.toISOString().split('T')[0]
+    days.push(iso)
+  }
+  return days
+}
 /* ---- CORE XP SYSTEM ---- */
 
 function getXP(){
@@ -275,6 +301,11 @@ function render(){
     div.className = "habit"
 
     const doneToday = h.log.has(today())
+    
+    const calendarHTML = getLast50Days().map(day => {
+    const isDone = h.log.has(day)
+     return `<div class="day ${isDone ? 'done' : ''}"></div>`
+     }).join('')
 
     div.innerHTML = `
       <div class="title">${h.title}</div>
@@ -288,8 +319,9 @@ function render(){
       <div class="streak">
         XP Entries: ${h.log.size}
       </div>
+      
+      <div class="calendar">${calendarHTML}</div>
     `
-
     const doneBtn = div.querySelector(".done")
     const undoBtn = div.querySelector(".undo")
 
