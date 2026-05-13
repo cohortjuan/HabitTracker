@@ -3,318 +3,298 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Habit Tracker</title>
+<title>Seedling Bob Habit Tracker</title>
 
 <style>
-
-* {
-  box-sizing: border-box;
-}
-
 body {
-  font-family: Arial, sans-serif;
-
-  background:
-    radial-gradient(circle at top left, rgba(120, 30, 60, 0.15), transparent 30%),
-    #07111f;
-
-  color: #f5f1fa;
-
-  max-width: 540px;
-  margin: 60px auto;
-  padding: 0 20px;
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #0b1220;
+  color: #e6f1ff;
 }
 
 /* HEADER */
-.title {
-  font-family: Georgia, serif;
-  font-size: 3rem;
-  font-weight: 700;
-  color: #d4b24c;
-  margin-bottom: 8px;
-  position: relative;
-}
-
-.title::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -10px;
-  width: 80px;
-  height: 2px;
-  background: rgba(212, 178, 76, 0.6);
-}
-
-.subtitle {
-  color: rgba(140, 150, 180, 0.8);
-  font-style: italic;
-  margin-bottom: 24px;
-}
-
-/* LIST */
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  margin-bottom: 14px;
-}
-
-label {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  padding: 16px 18px;
-
-  background: rgba(24, 32, 52, 0.96);
-
-  border: 1px solid rgba(139, 30, 63, 0.35);
-
-  border-radius: 14px;
-
-  cursor: pointer;
-
-  transition: 0.2s ease;
-}
-
-label:hover {
-  transform: translateY(-1px);
-  border-color: rgba(212, 178, 76, 0.4);
-}
-
-.plant {
-  font-size: 1.25rem;
-  transition: 0.15s ease;
-  margin-right: 12px;
-}
-
-.habit-text {
-  flex: 1;
-}
-
-input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  accent-color: #b38a3d;
-}
-
-/* BREATHING */
-.breathe-button {
-  margin-top: 10px;
-  width: 100%;
-  padding: 14px;
-  border: none;
-  border-radius: 12px;
-  background: #b38a3d;
-  color: #07111f;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.breathing-box {
-  display: none;
-  margin-top: 12px;
-  padding: 20px;
-  border-radius: 14px;
-  background: rgba(24, 32, 52, 0.96);
+.header {
   text-align: center;
+  padding: 20px;
+  background: #111a2e;
+  border-bottom: 2px solid #1e4bd8;
 }
 
-.breathing-box.active {
-  display: block;
+.bob {
+  font-size: 60px;
+  animation: bob 2.5s infinite ease-in-out;
 }
 
-.breathing-circle {
-  width: 110px;
-  height: 110px;
-  margin: 0 auto 16px;
-  border-radius: 50%;
-  border: 2px solid #d4b24c;
-  background: rgba(212, 178, 76, 0.12);
-  animation: breathe 8s infinite ease-in-out;
+@keyframes bob {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
 }
 
-@keyframes breathe {
-  0% { transform: scale(0.8); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(0.8); }
+.stage {
+  color: #6ee7b7;
+  font-size: 13px;
+  margin-top: 5px;
 }
 
+.phrase {
+  font-size: 14px;
+  color: #93c5fd;
+  min-height: 20px;
+  margin-top: 5px;
+}
+
+.stats {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 8px;
+}
+
+/* CONTAINER */
+.container {
+  max-width: 700px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* CARD */
+.card {
+  background: #121b2f;
+  border: 1px solid #223;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.progress {
+  height: 10px;
+  background: #1f2a44;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.bar {
+  height: 100%;
+  background: linear-gradient(90deg,#1e4bd8,#3b82f6);
+  width: 0%;
+  transition: width 0.3s;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+}
+
+button {
+  background: #1e4bd8;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover { background: #3b82f6; }
+
+.small {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* STREAK BADGE */
+.streak {
+  display: inline-block;
+  background: rgba(30,75,216,0.2);
+  border: 1px solid #1e4bd8;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  margin-top: 6px;
+}
 </style>
 </head>
 
 <body>
 
-<h1 class="title">Today's Progress</h1>
-<p class="subtitle">Habit Garden Tracker</p>
+<div class="header">
+  <div class="bob">🌱🤓</div>
+  <div class="stage" id="stage">Seedling Bob — Level 1</div>
+  <div class="phrase" id="phrase">Booting habit engine...</div>
+  <div class="stats">
+    XP: <span id="xp">0</span> | Level: <span id="level">1</span> | 🔥 Streak: <span id="streak">0</span>
+  </div>
+</div>
 
-<ul>
-
-  <li>
-    <label>
-      <span class="plant" data-id="water">🌰</span>
-      <span class="habit-text">Drink Water</span>
-      <input type="checkbox" class="habit" data-id="water">
-    </label>
-  </li>
-
-  <li>
-    <label>
-      <span class="plant" data-id="active">🌰</span>
-      <span class="habit-text">Get Active</span>
-      <input type="checkbox" class="habit" data-id="active">
-    </label>
-  </li>
-
-  <li>
-    <label>
-      <span class="plant" data-id="sleep">🌰</span>
-      <span class="habit-text">Sleep Well</span>
-      <input type="checkbox" class="habit" data-id="sleep">
-    </label>
-  </li>
-
-  <li>
-
-    <label>
-      <span class="plant" data-id="stress">🌰</span>
-      <span class="habit-text">Breathe / Stress</span>
-      <input type="checkbox" class="habit" data-id="stress">
-    </label>
-
-    <button class="breathe-button" id="breatheBtn">BREATHE</button>
-
-    <div class="breathing-box" id="breathingBox">
-      <div class="breathing-circle"></div>
-      <div id="breathText">Breathe In</div>
-    </div>
-
-  </li>
-
-</ul>
+<div class="container" id="app"></div>
 
 <script>
+/* ---------------- DATA ---------------- */
 
-document.addEventListener("DOMContentLoaded", () => {
+const phrases = [
+  "New commit detected… nice.",
+  "Your streak is compiling…",
+  "Bug fixed: consistency restored.",
+  "Pushing habits to production 🌱",
+  "Refactoring your life…",
+  "Cache updated: discipline++",
+  "You just shipped consistency.",
+  "Low hydration detected (again).",
+  "Daily build successful.",
+  "This streak is getting dangerous 👀"
+];
 
-/* =========================
-   DATA
-========================= */
+const habits = [
+  { name: "Drink 8 glasses of water", goal: 8, progress: 0 },
+  { name: "30 minutes of movement", goal: 1, progress: 0 },
+  { name: "Write 20 lines of code", goal: 20, progress: 0 }
+];
 
-const habits = document.querySelectorAll(".habit");
+/* ---------------- STORAGE KEYS ---------------- */
 
-const today = () =>
-  new Date().toISOString().slice(0, 10);
+const TODAY = new Date().toISOString().split("T")[0];
+const SAVE_KEY = "bob_habits_v2";
+const STREAK_KEY = "bob_streak";
+const LAST_DATE_KEY = "bob_last_date";
 
-function load(id) {
-  return JSON.parse(localStorage.getItem(id)) || { days: [] };
+/* ---------------- STATE ---------------- */
+
+let xp = 0;
+let streak = parseInt(localStorage.getItem(STREAK_KEY) || "0");
+let lastDate = localStorage.getItem(LAST_DATE_KEY);
+
+/* reset daily progress if new day */
+if (lastDate !== TODAY) {
+  streak = (lastDate && isYesterday(lastDate, TODAY)) ? streak + 1 : 1;
+  localStorage.setItem(STREAK_KEY, streak);
+  localStorage.setItem(LAST_DATE_KEY, TODAY);
+  saveHabits(true);
 }
 
-function save(id, data) {
-  localStorage.setItem(id, JSON.stringify(data));
+/* ---------------- UTIL ---------------- */
+
+function isYesterday(prev, now) {
+  const p = new Date(prev);
+  const n = new Date(now);
+  const diff = (n - p) / (1000*60*60*24);
+  return diff === 1;
 }
 
-/* =========================
-   STREAK
-========================= */
+function stageFromXP(xp) {
+  if (xp < 10) return "🌱 Seedling Bob — Level 1";
+  if (xp < 30) return "🪴 Sprout Bob — Level 2";
+  if (xp < 60) return "🌿 Growing Bob — Level 3";
+  return "🌳 Fully Grown Bob — Level 4";
+}
 
-function streak(set) {
-  let count = 0;
-  let d = new Date();
+/* ---------------- SAVE / LOAD ---------------- */
 
-  while (set.has(d.toISOString().slice(0,10))) {
-    count++;
-    d.setDate(d.getDate() - 1);
+function saveHabits(reset=false) {
+  if (reset) {
+    habits.forEach(h => h.progress = 0);
   }
-
-  return count;
+  localStorage.setItem(SAVE_KEY, JSON.stringify(habits));
 }
 
-/* =========================
-   PLANT
-========================= */
-
-function plantEmoji(n) {
-  if (n >= 30) return "🌳";
-  if (n >= 14) return "🌷";
-  if (n >= 7) return "🌿";
-  if (n >= 3) return "🌱";
-  return "🌰";
-}
-
-function update(id, plantEl) {
-  const data = load(id);
-  const set = new Set(data.days);
-
-  const s = streak(set);
-
-  plantEl.textContent = plantEmoji(s);
-}
-
-/* =========================
-   EVENTS
-========================= */
-
-habits.forEach(cb => {
-
-  const id = cb.dataset.id;
-  const plant = cb.parentElement.querySelector(".plant");
-
-  update(id, plant);
-
-  cb.addEventListener("change", () => {
-
-    const data = load(id);
-    const set = new Set(data.days);
-
-    const t = today();
-
-    set.has(t) ? set.delete(t) : set.add(t);
-
-    save(id, { days: [...set] });
-
-    update(id, plant);
-  });
-
-});
-
-/* =========================
-   BREATHING (SAFE)
-========================= */
-
-const btn = document.getElementById("breatheBtn");
-const box = document.getElementById("breathingBox");
-const text = document.getElementById("breathText");
-
-if (btn && box && text) {
-
-  const phases = ["Breathe In", "Hold", "Breathe Out", "Hold"];
-  const times = [4000, 2000, 4000, 2000];
-
-  let i = 0;
-
-  function loop() {
-    if (!box.classList.contains("active")) return;
-
-    text.textContent = phases[i];
-
-    setTimeout(() => {
-      i = (i + 1) % phases.length;
-      loop();
-    }, times[i]);
+function loadHabits() {
+  const saved = localStorage.getItem(SAVE_KEY);
+  if (saved) {
+    const data = JSON.parse(saved);
+    data.forEach((h,i) => habits[i].progress = h.progress);
   }
-
-  btn.addEventListener("click", () => {
-    box.classList.toggle("active");
-    if (box.classList.contains("active")) loop();
-  });
-
 }
 
-});
+/* ---------------- RENDER ---------------- */
 
+const app = document.getElementById("app");
+const phraseEl = document.getElementById("phrase");
+const stageEl = document.getElementById("stage");
+const xpEl = document.getElementById("xp");
+const levelEl = document.getElementById("level");
+const streakEl = document.getElementById("streak");
+
+function render() {
+  app.innerHTML = "";
+
+  habits.forEach((h, i) => {
+    const percent = (h.progress / h.goal) * 100;
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <div class="title">${h.name}</div>
+
+      <div class="progress">
+        <div class="bar" style="width:${percent}%"></div>
+      </div>
+
+      <div class="small">${h.progress}/${h.goal}</div>
+
+      <div class="controls">
+        <button onclick="add(${i})">+ progress</button>
+        <button onclick="reset(${i})">reset</button>
+      </div>
+    `;
+
+    app.appendChild(card);
+  });
+}
+
+/* ---------------- GAME LOGIC ---------------- */
+
+function add(i) {
+  const h = habits[i];
+  if (h.progress < h.goal) {
+    h.progress++;
+
+    xp += 2;
+
+    if (h.progress === h.goal) {
+      xp += 5; // completion bonus
+    }
+
+    saveHabits();
+    updateUI();
+    render();
+  }
+}
+
+function reset(i) {
+  habits[i].progress = 0;
+  saveHabits();
+  updateUI();
+  render();
+}
+
+/* ---------------- UI UPDATE ---------------- */
+
+function updateUI() {
+  stageEl.textContent = stageFromXP(xp);
+  xpEl.textContent = xp;
+  levelEl.textContent = Math.floor(xp / 20) + 1;
+  streakEl.textContent = streak;
+
+  phraseEl.textContent =
+    phrases[Math.floor(Math.random() * phrases.length)];
+}
+
+/* ---------------- INIT ---------------- */
+
+loadHabits();
+render();
+updateUI();
+
+/* auto phrase loop */
+setInterval(() => {
+  phraseEl.textContent =
+    phrases[Math.floor(Math.random() * phrases.length)];
+}, 5000);
 </script>
 
 </body>
