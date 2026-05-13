@@ -200,11 +200,15 @@ button{
 <script>
 
 const habits = [
-  { id:1, title:"Drink Water", goal:"Drink 8 glasses of water", log:{} },
-  { id:2, title:"Code Practice", goal:"Code 1 hour", log:{} },
-  { id:3, title:"Exercise", goal:"Workout 30 min", log:{} }
+  { id:1, title:"Drink Water", goal:"Drink 8 glasses of water", log: new Set()},
+  { id:2, title:"Code Practice", goal:"Code 1 hour", log: new Set()},
+  { id:3, title:"Exercise", goal:"Workout 30 min", log: new Set()}
 ]
-
+  habits.forEach(h => {
+  const saved = localStorage.getItem(`habit-${h.id}-log`)
+  h.log = new Set(saved ? JSON.parse(saved) : [])
+})
+  
 const phrases = [
  "git commit -m 'I showed up'",
  "bugs fear consistency",
@@ -233,7 +237,7 @@ function today(){
 function getXP(){
   let xp = 0
   habits.forEach(h=>{
-    xp += Object.keys(h.log).length * 10
+    xp += h.log.size* 10
   })
   return xp
 }
@@ -270,7 +274,7 @@ function render(){
     const div = document.createElement("div")
     div.className = "habit"
 
-    const doneToday = h.log[today()]
+    const doneToday = h.log.has(today())
 
     div.innerHTML = `
       <div class="title">${h.title}</div>
@@ -282,7 +286,7 @@ function render(){
       </div>
 
       <div class="streak">
-        XP Entries: ${Object.keys(h.log).length}
+        XP Entries: ${h.log.size}
       </div>
     `
 
@@ -290,8 +294,8 @@ function render(){
     const undoBtn = div.querySelector(".undo")
 
     doneBtn.onclick = () => {
-      h.log[today()] = true
-
+      h.log.add(today())
+      localStorage.setItem(`habit-${h.id}-log`, JSON.stringify(Array.from(h.log)))
       phrase.textContent =
         phrases[Math.floor(Math.random()*phrases.length)]
 
@@ -300,7 +304,8 @@ function render(){
     }
 
     undoBtn.onclick = () => {
-      delete h.log[today()]
+      h.log.delete(today())
+      localStorage.setItem(`habit-${h.id}-log`, JSON.stringify(Array.from(h.log)))
       updateUI()
       render()
     }
