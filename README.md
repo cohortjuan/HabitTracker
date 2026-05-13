@@ -1,5 +1,7 @@
 # 🌱 Seedling Bob — Gamified Habit Tracker
 
+https://cohortjuan.github.io/HabitTracker/
+
 A gamified habit tracker built with **vanilla HTML, CSS, and JavaScript**.  
 This project turns daily habits into an XP system where consistency levels up your digital companion — **Seedling Bob**.
 
@@ -116,8 +118,8 @@ It blends:
 
 ## 📸 Screenshot
 
-- Replace screenshot.png with an actual image file in your repo (e.g. /assets/screenshot.png)
-- Seedling Bob Preview: assets/screenshot.png
+-<img width="882" height="1319" alt="image" src="https://github.com/user-attachments/assets/c856e7b7-468e-4d57-98ef-236e4a5bb292" />
+
 
 ---
 
