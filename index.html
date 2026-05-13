@@ -188,20 +188,57 @@
         transform: scale(0.8);
       }
     }
+    .subtitle {
+  color: rgba(140, 150, 180, 0.8);
 
+  font-style: italic;
+
+  margin-bottom: 24px;
+
+  font-size: 0.95rem;
+}
+    .title {
+  font-family: Georgia, serif;
+
+  font-size: 3rem;
+
+  font-weight: 700;
+
+  color: #d4b24c;
+
+  letter-spacing: -1px;
+
+  margin-bottom: 28px;
+
+  position: relative;
+}
+.title::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: -10px;
+
+  width: 80px;
+  height: 2px;
+
+  background: rgba(212, 178, 76, 0.6);
+}
   </style>
 </head>
 
 <body>
 
-  <h1>Today</h1>
+  <h1 class="title">Today's Progress</h1>
+  <p class="subtitle">— Habit Garden Tracker</p>
 
   <ul id="habit-list">
 
     <li>
       <label>
         <span class="plant">🌰</span>
-        <span class="habit-text">Drink water</span>
+        <span class="habit-text">Drank water (8 glasses a day!)</span>
         <input type="checkbox" class="habit-check" data-id="water" />
       </label>
     </li>
@@ -209,7 +246,7 @@
     <li>
       <label>
         <span class="plant">🌰</span>
-        <span class="habit-text">Get Active (30 Minutes!)</span>
+        <span class="habit-text">Got Active (at least 30 Minutes!)</span>
         <input type="checkbox" class="habit-check" data-id="active" />
       </label>
     </li>
@@ -343,7 +380,6 @@
       }
 
     }
-
   </script>
 
 </body>
