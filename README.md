@@ -2,7 +2,7 @@
 
 A simple, atmospheric habit tracker built with vanilla HTML, CSS, and JavaScript. Each habit grows visually over time using a plant-based streak system.
 
-## Live Demo[
+## Live Demo
 https://cohortjuan.github.io/HabitTracker/
 
 ## Features
