@@ -1,10 +1,13 @@
+
+Copy
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Seedling Bob XP Tracker</title>
-
+ 
 <style>
 :root{
   --bg:#0b1020;
@@ -12,13 +15,13 @@
   --card2:#0f1626;
   --text:#eaf1ff;
   --muted:#7f8aa3;
-
+ 
   --green:#3ef0a8;
   --blue:#4aa3ff;
   --red:#ff5a6a;
   --gold:#ffd36a;
 }
-
+ 
 /* layout */
 body{
   margin:0;
@@ -29,19 +32,19 @@ body{
   justify-content:center;
   padding:30px;
 }
-
+ 
 .container{ width:420px; }
-
+ 
 /* HEADER */
 .header{
   text-align:center;
   margin-bottom:16px;
 }
-
+ 
 h1{ margin:0; font-size:1.6rem; }
-
+ 
 .sub{ color:var(--muted); font-size:0.9rem; }
-
+ 
 /* BOB CARD */
 .bob-card{
   background:linear-gradient(135deg,var(--card),var(--card2));
@@ -53,7 +56,7 @@ h1{ margin:0; font-size:1.6rem; }
   overflow:hidden;
   border:1px solid #1f2a44;
 }
-
+ 
 /* bob */
 #bob{
   width:140px;
@@ -61,18 +64,29 @@ h1{ margin:0; font-size:1.6rem; }
   transition: transform 0.4s ease;
   animation: float 3s ease-in-out infinite;
 }
-
+ 
 @keyframes float{
   0%,100%{ transform:translateY(0px); }
   50%{ transform:translateY(-6px); }
 }
-
+ 
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-15px); }
+  50% { transform: translateY(-8px); }
+}
+ 
+@keyframes sadness {
+  0% { filter: grayscale(0); opacity: 1; }
+  100% { filter: grayscale(0.6); opacity: 0.8; }
+}
+ 
 /* mood states */
 .happy{ filter: drop-shadow(0 0 8px #3ef0a8); }
 .neutral{}
 .tired{ filter: grayscale(0.4); }
 .elite{ filter: drop-shadow(0 0 14px #ffd36a); transform:scale(1.08); }
-
+ 
 /* XP BAR */
 .xp-wrap{
   margin-top:10px;
@@ -81,20 +95,20 @@ h1{ margin:0; font-size:1.6rem; }
   overflow:hidden;
   height:10px;
 }
-
+ 
 .xp-bar{
   height:10px;
   width:0%;
   background:linear-gradient(90deg,var(--green),var(--blue));
   transition: width 0.5s ease;
 }
-
+ 
 .level{
   font-size:0.85rem;
   margin-top:6px;
   color:var(--gold);
 }
-
+ 
 /* habits */
 .habit{
   background:var(--card);
@@ -102,21 +116,39 @@ h1{ margin:0; font-size:1.6rem; }
   border-radius:12px;
   margin-bottom:10px;
   border:1px solid #1e2a44;
+  position:relative;
 }
-
+ 
+.habit.streak-at-risk {
+  border-color: var(--red);
+  box-shadow: inset 0 0 8px rgba(255, 90, 106, 0.2);
+}
+ 
+.habit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+ 
 .title{ font-weight:600; }
-
+ 
+.streak-display {
+  font-size: 1.2rem;
+  color: var(--gold);
+}
+ 
 .goal{
   font-size:0.85rem;
   color:var(--muted);
   margin:6px 0 10px;
 }
-
+ 
 .actions{
   display:flex;
   gap:8px;
 }
-
+ 
 button{
   flex:1;
   padding:8px;
@@ -124,17 +156,26 @@ button{
   border:none;
   cursor:pointer;
   font-weight:600;
+  transition: all 0.2s ease;
 }
-
-.done{ background:var(--green); }
+ 
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+ 
+.commit{ background:var(--green); color: #000; }
 .undo{ background:#26324d; color:var(--text); }
-
-.streak{
-  margin-top:6px;
-  font-size:0.8rem;
-  color:var(--gold);
+ 
+.streak-warning {
+  font-size: 0.75rem;
+  color: var(--red);
+  margin-top: 6px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
-
+ 
 /* phrase */
 .phrase{
   text-align:center;
@@ -143,7 +184,8 @@ button{
   margin:10px 0;
   font-style:italic;
 }
-  
+ 
+/* Calendar grid */
 .calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -155,202 +197,404 @@ button{
   background: #1e2a44;
   border-radius: 3px;
   cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid #2a3a5a;
+}
+.day:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 8px #4aa3ff;
 }
 .day.done {
   background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+}
+.day.done:hover {
+  box-shadow: 0 0 12px var(--green);
+}
+ 
+/* Confetti animation */
+@keyframes confetti-fall {
+  0% { transform: translateY(-10px) rotateZ(0deg); opacity: 1; }
+  100% { transform: translateY(100px) rotateZ(360deg); opacity: 0; }
+}
+ 
+.confetti {
+  position: fixed;
+  pointer-events: none;
+  animation: confetti-fall 0.8s ease-out forwards;
+}
+ 
+/* Achievements */
+.achievements {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #1e2a44;
+}
+ 
+.achievement-title {
+  font-size: 0.8rem;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+ 
+.achievement {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  background: #1e2a44;
+  border: 1px solid #2a3a5a;
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin-right: 6px;
+  margin-bottom: 6px;
+}
+ 
+.achievement.unlocked {
+  background: rgba(62, 240, 168, 0.15);
+  border-color: var(--green);
+  color: var(--green);
+}
+ 
+.achievement:not(.unlocked) {
+  opacity: 0.5;
 }
 </style>
 </head>
-
+ 
 <body>
-
+ 
 <div class="container">
-
+ 
   <div class="header">
     <h1>🌱 Seedling Bob XP System</h1>
     <div class="sub">Level up your habits like a dev leveling skills</div>
   </div>
-
+ 
   <!-- BOB -->
   <div class="bob-card">
-
+ 
     <svg id="bob" viewBox="0 0 100 100">
-
+ 
       <!-- pot -->
       <rect x="30" y="72" width="40" height="18" rx="6" fill="#5a3d2b"/>
-
+ 
       <!-- stem -->
       <rect x="48" y="42" width="4" height="30" fill="#3ef0a8"/>
-
+ 
       <!-- leaf -->
       <path d="M50 42 C30 30, 30 12, 50 22 C70 12, 70 30, 50 42"
             fill="#3ef0a8" />
-
+ 
       <!-- face -->
       <circle id="eyeL" cx="45" cy="58" r="3" fill="#0b1020"/>
       <circle id="eyeR" cx="55" cy="58" r="3" fill="#0b1020"/>
-
+ 
       <path d="M45 66 Q50 69 55 66" stroke="#0b1020" fill="none"/>
-
+ 
       <!-- glasses -->
       <circle cx="45" cy="58" r="7" stroke="#4aa3ff" fill="none"/>
       <circle cx="55" cy="58" r="7" stroke="#4aa3ff" fill="none"/>
       <line x1="52" y1="58" x2="48" y2="58" stroke="#4aa3ff"/>
-
+ 
     </svg>
-
+ 
     <div class="xp-wrap">
       <div class="xp-bar" id="xpBar"></div>
     </div>
-
+ 
     <div class="level" id="levelText">Level 1 Seedling</div>
-
+ 
   </div>
-
+ 
   <div class="phrase" id="phrase"></div>
-
+ 
   <div id="habits"></div>
-
+ 
+  <div class="achievements" id="achievements-section">
+    <div class="achievement-title">🏆 Achievements</div>
+    <div id="achievements"></div>
+  </div>
+ 
 </div>
-
+ 
 <script>
-
+ 
 const habits = [
   { id:1, title:"Drink Water", goal:"Drink 8 glasses of water", log: new Set()},
   { id:2, title:"Code Practice", goal:"Code 1 hour", log: new Set()},
   { id:3, title:"Exercise", goal:"Workout 30 min", log: new Set()}
 ]
-  habits.forEach(h => {
+ 
+habits.forEach(h => {
   const saved = localStorage.getItem(`habit-${h.id}-log`)
   h.log = new Set(saved ? JSON.parse(saved) : [])
 })
-  
-const phrases = [
- "git commit -m 'I showed up'",
- "bugs fear consistency",
- "hydration = runtime stability",
- "streaks are just loops over discipline",
- "console.log('progress')",
- "no rollback on discipline",
- "deploy yourself daily",
- "refactor habits, not excuses",
- "null motivation detected → retry()",
- "your future self is reviewing this PR"
+ 
+const achievements = [
+  { id: 'first-deploy', icon: '🚀', title: 'First Deployment', description: 'Complete your first habit', unlock: (stats) => stats.totalCompleted >= 1 },
+  { id: 'week-build', icon: '🔥', title: '7-Day Build', description: 'Maintain a 7-day streak', unlock: (stats) => stats.maxStreak >= 7 },
+  { id: 'month-release', icon: '📦', title: '30-Day Release', description: 'Maintain a 30-day streak', unlock: (stats) => stats.maxStreak >= 30 },
+  { id: 'all-green', icon: '✅', title: 'All Systems Go', description: 'Complete all habits in one day', unlock: (stats) => stats.allDoneToday },
 ]
-
+ 
+const phrases = [
+  "git commit -m 'I showed up'",
+  "bugs fear consistency",
+  "hydration = runtime stability",
+  "streaks are just loops over discipline",
+  "console.log('progress')",
+  "no rollback on discipline",
+  "deploy yourself daily",
+  "refactor habits, not excuses",
+  "null motivation detected → retry()",
+  "your future self is reviewing this PR",
+  "merge conflict resolved ✓",
+  "test suite passed",
+  "production deploy successful",
+  "code review approved",
+  "debugging session complete",
+  "feature branch merged",
+  "refactor commit pushed",
+  "unit tests passing",
+  "zero warnings in console",
+  "build pipeline green"
+]
+ 
 const container = document.getElementById("habits")
 const xpBar = document.getElementById("xpBar")
 const levelText = document.getElementById("levelText")
 const phrase = document.getElementById("phrase")
 const bob = document.getElementById("bob")
-
+const achievementsContainer = document.getElementById("achievements")
+ 
+let unlockedAchievements = new Set(JSON.parse(localStorage.getItem('achievements') || '[]'))
+ 
 function today(){
   return new Date().toISOString().split("T")[0]
 }
-  
-function getLast50Days() {
+ 
+function getLast14Days() {
   const days = []
-  for (let i = 49; i >= 0; i--) {
+  for (let i = 13; i >= 0; i--) {
     const date = new Date()
     date.setDate(date.getDate() - i)
     const iso = date.toISOString().split('T')[0]
     days.push(iso)
   }
-  return days
+  return days.reverse()
 }
+ 
+/* ---- STREAK CALCULATION ---- */
+function getStreak(habit) {
+  let streak = 0
+  let checkDate = new Date()
+  
+  while (true) {
+    const dateStr = checkDate.toISOString().split('T')[0]
+    if (habit.log.has(dateStr)) {
+      streak++
+      checkDate.setDate(checkDate.getDate() - 1)
+    } else {
+      break
+    }
+  }
+  return streak
+}
+ 
+function getMaxStreak(habit) {
+  let maxStreak = 0
+  let currentStreak = 0
+  const sortedDates = Array.from(habit.log).sort().reverse()
+  
+  let lastDate = null
+  for (const date of sortedDates) {
+    if (!lastDate) {
+      currentStreak = 1
+      lastDate = new Date(date)
+    } else {
+      const currentDate = new Date(date)
+      const diffDays = (lastDate - currentDate) / (1000 * 60 * 60 * 24)
+      if (diffDays === 1) {
+        currentStreak++
+      } else {
+        maxStreak = Math.max(maxStreak, currentStreak)
+        currentStreak = 1
+      }
+      lastDate = currentDate
+    }
+  }
+  maxStreak = Math.max(maxStreak, currentStreak)
+  return maxStreak
+}
+ 
+/* ---- ACHIEVEMENTS ---- */
+function checkAchievements() {
+  const totalCompleted = habits.reduce((sum, h) => sum + h.log.size, 0)
+  const maxStreak = Math.max(...habits.map(h => getMaxStreak(h)))
+  const allDoneToday = habits.every(h => h.log.has(today()))
+  
+  const stats = { totalCompleted, maxStreak, allDoneToday }
+  
+  achievements.forEach(a => {
+    if (!unlockedAchievements.has(a.id) && a.unlock(stats)) {
+      unlockedAchievements.add(a.id)
+      localStorage.setItem('achievements', JSON.stringify(Array.from(unlockedAchievements)))
+    }
+  })
+}
+ 
+/* ---- CONFETTI EFFECT ---- */
+function triggerConfetti() {
+  const colors = ['var(--green)', 'var(--blue)', 'var(--gold)']
+  for (let i = 0; i < 15; i++) {
+    const confetti = document.createElement('div')
+    confetti.className = 'confetti'
+    confetti.style.left = Math.random() * 100 + '%'
+    confetti.style.background = colors[Math.floor(Math.random() * colors.length)]
+    confetti.style.width = Math.random() * 8 + 4 + 'px'
+    confetti.style.height = confetti.style.width
+    document.body.appendChild(confetti)
+    
+    setTimeout(() => confetti.remove(), 800)
+  }
+}
+ 
+/* ---- BOB REACTION ---- */
+function bobReact(type) {
+  bob.style.animation = 'none'
+  if (type === 'bounce') {
+    setTimeout(() => bob.style.animation = 'bounce 0.6s', 10)
+  } else if (type === 'sad') {
+    setTimeout(() => bob.style.animation = 'sadness 1.2s ease-out forwards', 10)
+  }
+}
+ 
 /* ---- CORE XP SYSTEM ---- */
-
+ 
 function getXP(){
   let xp = 0
   habits.forEach(h=>{
-    xp += h.log.size* 10
+    xp += h.log.size * 10
   })
   return xp
 }
-
+ 
 function getLevel(xp){
   return Math.floor(xp / 50) + 1
 }
-
+ 
 function updateUI(){
-
   const xp = getXP()
   const level = getLevel(xp)
-
+ 
   const progress = (xp % 50) / 50 * 100
   xpBar.style.width = progress + "%"
-
+ 
   levelText.textContent =
     `Level ${level} ${level < 3 ? "Seedling" : level < 6 ? "Sprout" : "Overgrown Dev"}`
-
-  // bob mood
+ 
   bob.className = ""
   if(level < 3) bob.classList.add("neutral")
   else if(level < 6) bob.classList.add("happy")
   else bob.classList.add("elite")
 }
-
+ 
+/* ---- ACHIEVEMENTS RENDER ---- */
+function renderAchievements() {
+  achievementsContainer.innerHTML = achievements.map(a => {
+    const unlocked = unlockedAchievements.has(a.id)
+    return `<div class="achievement ${unlocked ? 'unlocked' : ''}" title="${a.description}">${a.icon} ${a.title}</div>`
+  }).join('')
+}
+ 
 /* ---- RENDER ---- */
-
+ 
 function render(){
   container.innerHTML = ""
-
+ 
   habits.forEach(h=>{
-
     const div = document.createElement("div")
     div.className = "habit"
-
+ 
     const doneToday = h.log.has(today())
-    
-    const calendarHTML = getLast50Days().map(day => {
-    const isDone = h.log.has(day)
-     return `<div class="day ${isDone ? 'done' : ''}"></div>`
-     }).join('')
-
+    const streak = getStreak(h)
+    const isStreakAtRisk = !doneToday && streak > 0
+ 
+    if (isStreakAtRisk) {
+      div.classList.add('streak-at-risk')
+    }
+ 
+    const calendarHTML = getLast14Days().map(day => {
+      const isDone = h.log.has(day)
+      const dateObj = new Date(day)
+      const label = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      return `<div class="day ${isDone ? 'done' : ''}" title="${label}"></div>`
+    }).join('')
+ 
     div.innerHTML = `
-      <div class="title">${h.title}</div>
+      <div class="habit-header">
+        <div class="title">${h.title}</div>
+        <div class="streak-display">${streak > 0 ? '🔥 ' + streak : ''}</div>
+      </div>
       <div class="goal">Goal: ${h.goal}</div>
-
+ 
       <div class="actions">
-        <button class="done">${doneToday ? "Done ✔" : "Complete"}</button>
+        <button class="commit">${doneToday ? 'Committed ✔' : 'Commit'}</button>
         <button class="undo">Undo</button>
       </div>
-
-      <div class="streak">
-        XP Entries: ${h.log.size}
-      </div>
+ 
+      ${isStreakAtRisk ? '<div class="streak-warning">⚠️ Streak ends tonight</div>' : ''}
       
       <div class="calendar">${calendarHTML}</div>
     `
-    const doneBtn = div.querySelector(".done")
+ 
+    const commitBtn = div.querySelector(".commit")
     const undoBtn = div.querySelector(".undo")
-
-    doneBtn.onclick = () => {
+ 
+    commitBtn.onclick = () => {
+      const wasAlreadyDone = h.log.has(today())
       h.log.add(today())
       localStorage.setItem(`habit-${h.id}-log`, JSON.stringify(Array.from(h.log)))
-      phrase.textContent =
-        phrases[Math.floor(Math.random()*phrases.length)]
-
+      
+      if (!wasAlreadyDone) {
+        phrase.textContent = phrases[Math.floor(Math.random()*phrases.length)]
+        triggerConfetti()
+        bobReact('bounce')
+        checkAchievements()
+        renderAchievements()
+      }
+ 
       updateUI()
       render()
     }
-
+ 
     undoBtn.onclick = () => {
+      const hadStreak = getStreak(h) > 0
       h.log.delete(today())
       localStorage.setItem(`habit-${h.id}-log`, JSON.stringify(Array.from(h.log)))
+      
+      if (hadStreak && !h.log.has(today())) {
+        bobReact('sad')
+      }
+ 
       updateUI()
       render()
     }
-
+ 
     container.appendChild(div)
   })
-
+ 
   updateUI()
 }
-
+ 
 render()
+checkAchievements()
+renderAchievements()
 phrase.textContent = "Initializing discipline runtime..."
 </script>
-
+ 
 </body>
 </html>
